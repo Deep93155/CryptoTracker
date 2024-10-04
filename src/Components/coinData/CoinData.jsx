@@ -5,6 +5,7 @@ import fetchData from '../../services/fetchCoinData';
 import store from '../../zustandState/StateStore';
 import { useNavigate } from 'react-router-dom';
 import MyLoader from '../pageLoader/PageLoader';
+import RetryButton from '../Button/RetryButton';
 function CoinData(){ 
     const valueObject = store();
     const [page,setPage] = useState(1)
@@ -25,12 +26,11 @@ function CoinData(){
             staleTime:1000*60*2,
         }
     )
-  
     if(isLoading){
         
         return (
             <>
-            <div>
+            <div className='my-10'>
                 <div className='text-white text-2xl font-semibold '>loading...</div>
                 <MyLoader/>
             </div>
@@ -62,7 +62,7 @@ function CoinData(){
                             <div key={coin.id} className='w-full flex justify-center items-center py-4'>
                                 <div className=' flex basis-1/3 justify-center items-center hover hover:cursor-pointer' onClick={()=>clickHandler(coin.id)}>
                                     <div className='w-20 h-20 p-1 m-2 flex'>
-                                        <img className='w-fit' src={coin.image} alt="not found" />
+                                        <img className='w-fit' src={coin.image} alt="not found" loading="lazy"/>
                                     </div>
                                     <div className='flex flex-col '>
                                         <div className='text-3xl'>{coin.name}</div>
@@ -92,8 +92,11 @@ function CoinData(){
         )
     }else{
         return (
-            <div className='text-3xl font-semibold text-yellow-400'> 
-                data is null
+            <div className='flex flex-row gap-2 items-center justify-center my-10'>
+                <div className='text-2xl font-semibold text-yellow-400 mx-7'> 
+                    Unable! to fetch data..
+                </div>
+                <RetryButton/>
             </div>
         )
     }
