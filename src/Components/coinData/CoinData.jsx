@@ -3,12 +3,17 @@ import { useState } from 'react';
 import {useQuery} from 'react-query';
 import fetchData from '../../services/fetchCoinData';
 import store from '../../zustandState/StateStore';
-// import { currencyContext } from '../../Context.API/currencyContextAPI';
-// import { useContext } from 'react';
-// eslint-disable-next-line react/prop-types
+import { useNavigate } from 'react-router-dom';
+import MyLoader from '../pageLoader/PageLoader';
 function CoinData(){ 
-    const valueObject = store()
+    const valueObject = store();
     const [page,setPage] = useState(1)
+
+    const navigator = useNavigate()
+
+    function clickHandler(id){
+        navigator(`/details/${id}`)
+    }
     console.log(page)
     const {isLoading,data,isError}  = useQuery(
         ['coins',page,valueObject.currency],
@@ -23,7 +28,14 @@ function CoinData(){
   
     if(isLoading){
         
-        return  <div className='text-white text-2xl font-semibold '>loading...</div>
+        return (
+            <>
+            <div>
+                <div className='text-white text-2xl font-semibold '>loading...</div>
+                <MyLoader/>
+            </div>
+            </>
+        )
         
     }
     if(isError){
@@ -48,7 +60,7 @@ function CoinData(){
                         return(
                             
                             <div key={coin.id} className='w-full flex justify-center items-center py-4'>
-                                <div className=' flex basis-1/3 justify-center items-center'>
+                                <div className=' flex basis-1/3 justify-center items-center hover hover:cursor-pointer' onClick={()=>clickHandler(coin.id)}>
                                     <div className='w-20 h-20 p-1 m-2 flex'>
                                         <img className='w-fit' src={coin.image} alt="not found" />
                                     </div>
